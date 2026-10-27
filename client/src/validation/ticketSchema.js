@@ -23,7 +23,7 @@ export const createTicketSchema = z.object({
     .max(80, 'Name must be 80 characters or fewer.'),
 });
 
-/** Returns { data, errors } where errors maps field name -> first message. */
+/**  returns either the clean data or an object of error messages, one per field */
 export function validateTicket(values) {
   const result = createTicketSchema.safeParse(values);
   if (result.success) return { data: result.data, errors: {} };

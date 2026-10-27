@@ -22,6 +22,6 @@ export const ALLOWED_TRANSITIONS = {
   RESOLVED: ['OPEN'],
 };
 
-export function canTransition(from, to) {
+export function canTransition(from, to) { // returns true if a ticket can transition from the given status to the target status
   return ALLOWED_TRANSITIONS[from]?.includes(to) ?? false;
 }

@@ -13,6 +13,6 @@ export function openDatabase(file, { migrate = true } = {}) {
   }
   const db = new Database(file);
   db.pragma('journal_mode = WAL');
-  if (migrate) runMigrations(db);
+  if (migrate) runMigrations(db); // apply any pending migrations to keep the schema up to date
   return db;
 }

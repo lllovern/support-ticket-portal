@@ -8,14 +8,14 @@ import { STATUS_LABELS, nextStatuses, transitionLabel } from '../constants.js';
 import { formatDate } from '../utils/format.js';
 
 export default function TicketDetailPage() {
-  const { id } = useParams();
+  const { id } = useParams(); // get the ticket ID from the URL parameters
   const navigate = useNavigate();
   const { showFlash } = useFlash();
 
-  const [ticket, setTicket] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(null);
-  const [reloadKey, setReloadKey] = useState(0);
+  const [ticket, setTicket] = useState(null); // the ticket data fetched from the server
+  const [loading, setLoading] = useState(true); // whether the ticket is currently being loaded
+  const [loadError, setLoadError] = useState(null); // any error that occurred while loading the ticket
+  const [reloadKey, setReloadKey] = useState(0); // triggers a reload of the ticket when incremented
 
   const [pendingStatus, setPendingStatus] = useState(null);
   const [deleting, setDeleting] = useState(false);
@@ -40,14 +40,14 @@ export default function TicketDetailPage() {
     return () => controller.abort();
   }, [id, reloadKey]);
 
-  async function handleStatusChange(status) {
+  async function handleStatusChange(status) { // handles changing the ticket status
     setPendingStatus(status);
     setActionError(null);
     try {
-      const updated = await updateTicketStatus(id, status);
+      const updated = await updateTicketStatus(id, status); // send a request to update the ticket status
       setTicket(updated);
       showFlash(`Status changed to ${STATUS_LABELS[status]}.`);
-    } catch (err) {
+    } catch (err) { // on error shows it in an alert within the page
       setActionError(err.message);
     } finally {
       setPendingStatus(null);
@@ -55,11 +55,11 @@ export default function TicketDetailPage() {
   }
 
   async function handleDelete() {
-    if (!window.confirm(`Delete ticket #${ticket.id}? This can’t be undone.`)) return;
+    if (!window.confirm(`Delete ticket #${ticket.id}? This can’t be undone.`)) return; // confirm with the user before deleting the ticket
     setDeleting(true);
     setActionError(null);
     try {
-      await deleteTicket(id);
+      await deleteTicket(id); // send a request to delete the ticket
       showFlash(`Ticket #${ticket.id} deleted.`);
       navigate('/');
     } catch (err) {
@@ -90,7 +90,7 @@ export default function TicketDetailPage() {
     );
   }
 
-  const busy = Boolean(pendingStatus) || deleting;
+  const busy = Boolean(pendingStatus) || deleting; // whether any action is currently in progress
   const moves = nextStatuses(ticket.status);
 
   return (

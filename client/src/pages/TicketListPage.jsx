@@ -12,13 +12,12 @@ export default function TicketListPage() {
   const status = searchParams.get('status') ?? '';
   const priority = searchParams.get('priority') ?? '';
 
-  const [tickets, setTickets] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [reloadKey, setReloadKey] = useState(0);
-
+  const [tickets, setTickets] = useState([]); // the list of tickets fetched from the server
+  const [loading, setLoading] = useState(true);// whether the tickets are currently being loaded from the server
+  const [error, setError] = useState(null); // any error that occurred while fetching tickets
+  const [reloadKey, setReloadKey] = useState(0); // Triggers another ticket fetch when the user retries after an error.
   useEffect(() => {
-    const controller = new AbortController();
+    const controller = new AbortController(); // Lets us cancel this request if the page changes or a newer request starts. 
     setLoading(true);
     setError(null);
 
@@ -36,7 +35,7 @@ export default function TicketListPage() {
     return () => controller.abort();
   }, [status, priority, reloadKey]);
 
-  function handleFilterChange(name, value) {
+  function handleFilterChange(name, value) { // updates the URL search params when a filter changes
     const next = new URLSearchParams(searchParams);
     if (value) next.set(name, value);
     else next.delete(name);

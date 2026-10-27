@@ -3,7 +3,9 @@ import { PRIORITIES, PRIORITY_LABELS } from '../constants.js';
 import { validateTicket } from '../validation/ticketSchema.js';
 
 const EMPTY_VALUES = { title: '', description: '', priority: '', requesterName: '' };
-const NO_ERRORS = {}; // stable default so the effect below doesn't re-run every render
+const NO_ERRORS = {}; // the empty object is created once, outside the component, so every render reuses the same empty object.
+// A new {} on each render would make the useEffect below run in an endless loop.
+//It must be the same object so React doesn’t mistake every render for “new server errors,” which would make the effect run, update state, render again, and loop forever.
 
 function Field({ id, label, error, hint, children }) {
   return (
@@ -31,14 +33,14 @@ function Field({ id, label, error, hint, children }) {
  * serverErrors (field -> message) come from a 400 response and are shown until that field is edited.
  */
 export default function TicketForm({ onSubmit, submitting = false, serverErrors = NO_ERRORS }) {
-  const [values, setValues] = useState(EMPTY_VALUES);
-  const [errors, setErrors] = useState({});
-  const [attempted, setAttempted] = useState(false);
-  const [editedSinceServer, setEditedSinceServer] = useState({});
+  const [values, setValues] = useState(EMPTY_VALUES); // whats typed in each field
+  const [errors, setErrors] = useState({}); // client side validation messages
+  const [attempted, setAttempted] = useState(false); // whether the user has tried to submit the form
+  const [editedSinceServer, setEditedSinceServer] = useState({}); // tracks which fields have been edited since the last server error
 
   useEffect(() => setEditedSinceServer({}), [serverErrors]);
 
-  function handleChange(event) {
+  function handleChange(event) { // updates values and validation state as the user types
     const { name, value } = event.target;
     const next = { ...values, [name]: value };
     setValues(next);
@@ -47,7 +49,7 @@ export default function TicketForm({ onSubmit, submitting = false, serverErrors 
     if (attempted) setErrors(validateTicket(next).errors);
   }
 
-  function handleSubmit(event) {
+  function handleSubmit(event) { // validates the form and calls onSubmit if valid
     event.preventDefault();
     setAttempted(true);
     const { data, errors: nextErrors } = validateTicket(values);
@@ -55,16 +57,16 @@ export default function TicketForm({ onSubmit, submitting = false, serverErrors 
     if (data) onSubmit(data);
   }
 
-  const errorFor = (name) =>
+  const errorFor = (name) => // returns the error message for a field, preferring client-side errors over server-side ones
     errors[name] || (!editedSinceServer[name] ? serverErrors[name] : undefined);
 
-  const describedBy = (name, hasHint = false) => {
+  const describedBy = (name, hasHint = false) => { // links each input to its error or hint text for user accessibility
     if (errorFor(name)) return `${name}-error`;
     return hasHint ? `${name}-hint` : undefined;
   };
 
   return (
-    <form className="ticket-form" onSubmit={handleSubmit} noValidate>
+    <form className="ticket-form" onSubmit={handleSubmit} noValidate> // turns off browser's default validation message and use mine instead
       <Field id="title" label="Title" error={errorFor('title')} hint="A short summary, like “VPN drops every hour”.">
         <input
           id="title"

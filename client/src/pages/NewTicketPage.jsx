@@ -13,14 +13,14 @@ export default function NewTicketPage() {
   const [formError, setFormError] = useState(null);
 
   async function handleSubmit(data) {
-    setSubmitting(true);
+    setSubmitting(true); // indicate that the form is being submitted
     setFormError(null);
     try {
       const ticket = await createTicket(data);
-      showFlash(`Ticket #${ticket.id} created.`);
+      showFlash(`Ticket #${ticket.id} created.`); // show a flash message indicating the ticket was created
       navigate(`/tickets/${ticket.id}`);
     } catch (err) {
-      const details = err.details ?? {};
+      const details = err.details ?? {}; // extract the details of the error if available
       setServerErrors(details);
       setFormError(
         err.status === 400 && Object.keys(details).length > 0

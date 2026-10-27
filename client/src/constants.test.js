@@ -1,7 +1,7 @@
 import { canTransition, nextStatuses } from './constants.js';
 
 describe('status transitions', () => {
-  it.each([
+  it.each([ // allowed transitions
     ['OPEN', 'IN_PROGRESS'],
     ['IN_PROGRESS', 'RESOLVED'],
     ['IN_PROGRESS', 'OPEN'],

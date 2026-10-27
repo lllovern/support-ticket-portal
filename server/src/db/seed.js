@@ -36,11 +36,11 @@ const SAMPLE_TICKETS = [
 const db = openDatabase(config.databaseFile);
 const tickets = createTicketRepository(db);
 
-const { count } = db.prepare('SELECT COUNT(*) AS count FROM tickets').get();
+const { count } = db.prepare('SELECT COUNT(*) AS count FROM tickets').get(); // get the current number of tickets in the database
 if (count > 0) {
   console.log(`Database already has ${count} tickets. Skipping seed.`);
 } else {
-  for (const { status, ...input } of SAMPLE_TICKETS) {
+  for (const { status, ...input } of SAMPLE_TICKETS) { // create each sample ticket, setting the status if it's not OPEN
     const ticket = tickets.create(input);
     if (status !== 'OPEN') tickets.update(ticket.id, { status });
   }

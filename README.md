@@ -1,6 +1,6 @@
 # Internal Support Ticket Portal
 
-A small full-stack app where employees raise support tickets and the support team tracks them from Open to Resolved.
+A simple full-stack app where employees raise support tickets and the support team tracks them from Open to Resolved.
 
 - **Frontend:** React 18 + Vite, React Router, Zod
 - **Backend:** Node.js + Express, Zod
@@ -48,7 +48,7 @@ cd server && npm test       # 25 tests: API endpoints, validation, status rules,
 cd client && npm test       # 16 tests: form validation, API client errors, status rules
 ```
 
-Server tests use an in-memory database, so they never touch your local data.
+Server tests use an in-memory database, so they never touch the local data.
 
 ## Project structure
 
@@ -112,17 +112,33 @@ New tickets always start as Open. Open cannot go straight to Resolved, because s
 
 ## What I'd do next
 
-1. **Route tickets by department.** Add a `category` field (IT, HR, Facilities) and a filter, so tickets reach the right team instead of anyone handling any request.
-2. **Authentication and roles,** so only the support team can change status and requesters see their own tickets.
-3. **An `assignee` field,** so every ticket has a clear owner.
-4. **Pagination and search** on the ticket list.
-5. **Editing in the UI** for title, description and priority.
-6. **Docker Compose** for a one-command setup, and Playwright end-to-end tests.
+1. **Route tickets by department.**
+   At the moment, anyone can pick up and resolve any ticket, even one meant for another
+   team. I'd add a `category` field (for example IT, HR or Facilities) with a matching
+   filter, so each ticket goes to the team that can actually help.
+
+2. **Add authentication and roles.**
+   In a large organisation like Gamuda, access control matters. With logins and roles,
+   only the support team could change a ticket's status, and requesters would only see
+   their own tickets.
+
+3. **Add an `assignee` field.**
+   Giving every ticket a clear owner avoids confusion about who is handling it, and stops
+   two people from working on the same request without knowing.
+
+4. **Add pagination and search.**
+   A real helpdesk builds up hundreds of tickets over time. Pagination would keep the list
+   fast, and a search bar would make it much quicker to find a specific ticket.
+
+5. **Add Docker Compose and end-to-end tests.**
+   Docker Compose would let anyone start the whole project with one command. Playwright
+   tests would check the full flow in a real browser, so changes don't break it without
+   anyone noticing.
 
 ## Time spent
 
-About _[X]_ hours.
+About _[2]_ hours.
 
 ## Use of AI tools
 
-_[Fill this in honestly based on the company's policy. For example: "I used Claude (an AI assistant) to help scaffold parts of the frontend and backend. I reviewed, ran and tested all of the code, and I can explain every part of it."]_
+I used AI in helping me build the foundation of the app and the logic to help with the efficiency of the project. I also went to AI helped to provide a better option for the tech stack to use in this scenario. 

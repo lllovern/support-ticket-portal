@@ -22,14 +22,14 @@ function toTicket(row) {
   };
 }
 
-export function createTicketRepository(db, { now = () => new Date().toISOString() } = {}) {
+export function createTicketRepository(db, { now = () => new Date().toISOString() } = {}) { // creates a repository for interacting with tickets in the database
   const findByIdStmt = db.prepare('SELECT * FROM tickets WHERE id = ?');
 
   function findById(id) {
-    return toTicket(findByIdStmt.get(id));
+    return toTicket(findByIdStmt.get(id)); // fetch a ticket by its ID and convert it to the ticket format
   }
 
-  function list({ status, priority } = {}) {
+  function list({ status, priority } = {}) { // lists tickets, optionally filtered by status and priority
     const conditions = [];
     const params = {};
     if (status) {
@@ -47,7 +47,7 @@ export function createTicketRepository(db, { now = () => new Date().toISOString(
       .map(toTicket);
   }
 
-  function create({ title, description, priority, requesterName }) {
+  function create({ title, description, priority, requesterName }) { // creates a new ticket with the given details and returns it
     const timestamp = now();
     const result = db
       .prepare(
@@ -63,7 +63,7 @@ export function createTicketRepository(db, { now = () => new Date().toISOString(
     const fields = Object.keys(changes).filter((key) => key in COLUMNS);
     if (fields.length === 0) return findById(id);
 
-    const assignments = fields.map((key) => `${COLUMNS[key]} = @${key}`).join(', ');
+    const assignments = fields.map((key) => `${COLUMNS[key]} = @${key}`).join(', '); // create the SQL assignments for the fields being updated
     const result = db
       .prepare(`UPDATE tickets SET ${assignments}, updated_at = @updatedAt WHERE id = @id`)
       .run({ ...pick(changes, fields), updatedAt: now(), id });
