@@ -11,7 +11,7 @@ export class ApiError extends Error {
   }
 }
 
-async function request(path, { method = 'GET', body, signal } = {}) {
+async function request(path, { method = 'GET', body, signal } = {}) { // Makes an HTTP request to the API with the given path and options
   let response;
   try {
     response = await fetch(`${BASE_URL}${path}`, {

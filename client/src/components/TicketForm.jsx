@@ -65,8 +65,8 @@ export default function TicketForm({ onSubmit, submitting = false, serverErrors 
     return hasHint ? `${name}-hint` : undefined;
   };
 
-  return (
-    <form className="ticket-form" onSubmit={handleSubmit} noValidate> // turns off browser's default validation message and use mine instead
+  return ( //  turns off browser's default validation message and use mine instead
+    <form className="ticket-form" onSubmit={handleSubmit} noValidate>
       <Field id="title" label="Title" error={errorFor('title')} hint="A short summary, like “VPN drops every hour”.">
         <input
           id="title"

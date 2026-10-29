@@ -30,11 +30,11 @@ export const ALLOWED_TRANSITIONS = {
   RESOLVED: ['OPEN'],
 };
 
-export function canTransition(from, to) {
+export function canTransition(from, to) { // Checks if a transition from one status to another is allowed
   return ALLOWED_TRANSITIONS[from]?.includes(to) ?? false;
 }
 
-export function nextStatuses(current) {
+export function nextStatuses(current) { // Returns the list of valid next statuses for the current status
   return ALLOWED_TRANSITIONS[current] ?? [];
 }
 

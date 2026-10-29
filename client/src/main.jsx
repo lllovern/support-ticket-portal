@@ -14,3 +14,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </BrowserRouter>
   </React.StrictMode>
 );
+
+// Wraps the application with routing capabilities
+// Provides flash message context to the application
